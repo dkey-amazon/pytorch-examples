@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 # To run samples:
 # bash run_example.sh {file_to_run.py} {num_gpus}
@@ -9,5 +10,6 @@
 # tensor_parallel_example.py
 # fsdp_tp_example.py
 
-echo "Launching ${1:-fsdp_tp_example.py} with ${2:-4} gpus"
+NUM_GPUS=$(python -c "import torch; print(torch.cuda.device_count())")
+echo "Launching ${1:-fsdp_tp_example.py} with ${2:-$NUM_GPUS} gpus"
 torchrun --nnodes=1 --nproc_per_node=${2:-4} --rdzv_id=101 --rdzv_endpoint="localhost:5972" ${1:-fsdp_tp_example.py}
